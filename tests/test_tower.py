@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from base import *  # noqa: F403
 from config import TARGET_MODES, TOWER_BASE_COSTS, UPGRADE_COSTS
+from enemy import Enemy
 from state import GameState
 from tower import Tower
 
@@ -75,8 +76,6 @@ def test_select_target_first_last():
     gs = _make_game()
     t = Tower("archer", 5, 5, gs)
     # build dummy enemies manually
-    from enemy import Enemy
-
     route = [(100, 100), (200, 100)]
     e1 = Enemy("basic", route)
     e1.x, e1.y = 100, 100
@@ -103,8 +102,6 @@ def test_tower_can_shoot_cooldown():
 def test_shoot_emits_projectile():
     gs = _make_game()
     t = Tower("archer", 5, 5, gs)
-    from enemy import Enemy
-
     e = Enemy("basic", [(100, 100), (200, 100)])
     e.x, e.y = 200, 100
     projs = t.shoot(e, 1000)
@@ -117,8 +114,6 @@ def test_archer_level3_barrage():
     t = Tower("archer", 5, 5, gs)
     t.level = 3
     t._apply_stats()
-    from enemy import Enemy
-
     e = Enemy("basic", [(100, 100), (200, 100)])
     e.x, e.y = 200, 100
     projs = t.shoot(e, 1000)

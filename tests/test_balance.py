@@ -7,6 +7,7 @@ from config import (
     BOSS_STATS,
     ENDLESS_BASE_WAVE,
     ENEMY_STATS,
+    STARTING_CURRENCY,
     TOWER_BASE_COSTS,
     TOWER_STATS,
     UPGRADE_COSTS,
@@ -82,8 +83,6 @@ def test_boss_hp_large_but_finite():
 def test_economy_can_recover():
     # starting currency can always afford cheapest tower
     cheapest = min(TOWER_BASE_COSTS.values())
-    from config import STARTING_CURRENCY
-
     assert STARTING_CURRENCY >= cheapest
     # kill reward positive
     for s in ENEMY_STATS.values():
