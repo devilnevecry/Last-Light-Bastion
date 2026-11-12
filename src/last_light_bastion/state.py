@@ -15,6 +15,7 @@ from config import (
     TARGET_MODES,
     TOWER_BASE_COSTS,
     UPGRADE_COSTS,
+    WAVES,
 )
 from enemy import Enemy, StatusEffect
 from map import ALL_MAPS
@@ -225,7 +226,7 @@ class GameState:
             self.spawn_boss(wave_result["boss"])
         # enemies
         for enemy in self.enemies:
-            enemy.update(dt)
+            enemy.update(dt, self)
         # enemies reaching exit deal damage
         for enemy in list(self.enemies):
             if enemy.finished and enemy.alive:
@@ -237,6 +238,19 @@ class GameState:
                     self.defeated = True
         # remove dead/finished
         self.enemies = [e for e in self.enemies if e.alive and not e.finished]
+        # wave clearance -> wave_clear / victory
+        wm = self.wave_manager
+        if wm.wave is not None:
+            last_campaign_wave = max(WAVES)
+            if wave_result.get("done") and not self.enemies:
+                wm.state = "victory" if wm.wave.index >= last_campaign_wave else "wave_clear"
+            elif (
+                wm.wave.boss_id
+                and wm.wave.boss_spawned
+                and not any(isinstance(e, Boss) for e in self.enemies)
+                and not self.enemies
+            ):
+                wm.state = "victory" if wm.wave.index >= last_campaign_wave else "wave_clear"
         # towers target & shoot
         now_ms = pygame.time.get_ticks()
         for tower in self.towers:
@@ -245,11 +259,11 @@ class GameState:
                 if other is not None and other.supports(tower):
                     support *= other.support_multiplier
             effective_cooldown = tower.cooldown_ms / support if support > 0 else tower.cooldown_ms
-            if now_ms - tower.last_shot_ms >= effective_cooldown:
+            if now_ms - tower.last_shot_ms >= effective_cooldown and tower.can_shoot(now_ms):
                 target = tower.select_target(self.enemies, now_ms)
                 if target is not None:
-                    for proj in tower.shoot(target, now_ms):
-                        self.projectiles.append(proj)
+                    for pd in tower.shoot(target, now_ms):
+                        self.projectiles.append(Projectile(pd))
         # projectiles
         for proj in self.projectiles:
             proj.update(dt)
@@ -264,6 +278,12 @@ class GameState:
         self.warnings = [w for w in self.warnings if w.get("ms", 0) > 0]
         for w in self.warnings:
             w["ms"] -= dt
+            if w.get("callback") and w.get("ms", 0) <= 0:
+                try:
+                    w["callback"](self)
+                except Exception:
+                    pass
+                w["callback"] = None
         self.explosions = [e for e in self.explosions if e.get("life", 0) > 0]
         for e in self.explosions:
             e["life"] -= dt
@@ -360,3 +380,12 @@ class GameState:
 
     def spawn_explosion(self, x: float, y: float, max_radius: int = 26) -> None:
         self.explosions.append({"x": x, "y": y, "life": 700, "max_radius": max_radius, "frame": 0})
+
+    def spawn_explosion_warning(self, target, radius, ms, callback) -> None:
+        self.warnings.append({
+            "kind": "ability_warning",
+            "target": target,
+            "radius": radius,
+            "ms": ms,
+            "callback": callback,
+        })

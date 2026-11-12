@@ -24,12 +24,15 @@ class Projectile:
     def update(self, dt_ms: float) -> None:
         if not self.alive:
             return
-        self.data.speed * (dt_ms / 1000.0)
         self.x += self.vx * (dt_ms / 1000.0)
         self.y += self.vy * (dt_ms / 1000.0)
         dx = self.data.target_x - self.x
         dy = self.data.target_y - self.y
-        if math.hypot(dx, dy) < 6:
+        dist = math.hypot(dx, dy)
+        if dist < 6:
+            self.alive = False
+        elif dist > 0 and self.vx * dx + self.vy * dy < 0:
+            # Projectile overshot/passed its target; it will never reach it.
             self.alive = False
 
     def collides_with(self, enemy) -> bool:

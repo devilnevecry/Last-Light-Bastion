@@ -115,7 +115,7 @@ class Boss(Enemy):
         if self.ability_timer_ms > 3500:
             self.ability_timer_ms = 0
             # chain lightning to nearest towers
-            tx, ty = self.center_pixel()
+            tx, ty = (self.x, self.y)
             targets = sorted(
                 game.towers,
                 key=lambda t: math.hypot(t.center_pixel()[0] - tx, t.center_pixel()[1] - ty),

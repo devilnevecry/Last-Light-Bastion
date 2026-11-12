@@ -49,6 +49,7 @@ save_*.json
 
 # QA / test evidence (internal, not for release)
 /qa_evidence*/
+/phase3_evidence/
 
 # Testing
 .pytest_cache/

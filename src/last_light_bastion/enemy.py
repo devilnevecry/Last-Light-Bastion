@@ -126,7 +126,7 @@ class Enemy:
             self.x = p0[0] + (p1[0] - p0[0]) * self.progress
             self.y = p0[1] + (p1[1] - p0[1]) * self.progress
 
-    def update(self, dt_ms: float) -> None:
+    def update(self, dt_ms: float, game=None) -> None:
         if self.is_dead() or self.finished:
             # still tick regen? no if dead
             if not self.is_dead():
