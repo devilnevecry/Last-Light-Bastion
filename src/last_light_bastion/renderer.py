@@ -163,6 +163,7 @@ class Renderer:
         self._draw_particles(game)
         self._draw_towers(game)
         self._draw_placement_preview(game)
+        self._draw_build_palette(game, i18n)
         self._draw_warnings(game)
         self._draw_hud(game, i18n)
         if game.placement_mode:
@@ -256,6 +257,37 @@ class Renderer:
         self._draw_text(f"{name}  {cost}", mx + 14, my + 14, self.font_small, COLOR_TEXT)
         if game.currency < cost:
             self._draw_text(i18n.t("ui", "cannot_afford"), mx + 14, my + 32, self.font_small, COLOR_DANGER)
+
+    def _draw_build_palette(self, game, i18n) -> None:
+        surf = self.surface
+        ox, oy = game.grid_offset
+        ts = game.tile_size
+        # palette bar sits below the grid
+        bar_y = oy + game.map.rows * ts + 10
+        bar_h = 78
+        pygame.draw.rect(surf, (26, 22, 38), (ox, bar_y, game.map.cols * ts, bar_h), border_radius=6)
+        pygame.draw.rect(surf, COLOR_ACCENT, (ox, bar_y, game.map.cols * ts, bar_h), width=2, border_radius=6)
+        self._draw_text(i18n.t("ui", "place"), ox + 10, bar_y + 6, self.font_small, COLOR_TEXT)
+        bx = ox + 110
+        by = bar_y + 10
+        btn_w = 100
+        for i, tower_id in enumerate(["archer", "cannon", "frost", "arc", "poison", "support"]):
+            btn_x = bx + i * (btn_w + 10)
+            selected = game.placement_mode == tower_id
+            cost = TOWER_BASE_COSTS[tower_id]
+            affordable = game.currency >= cost
+            btn_color = COLOR_ACCENT if selected else (COLOR_TEXT_DIM if not affordable else COLOR_TEXT)
+            rect = pygame.Rect(btn_x, by, btn_w - 8, bar_h - 20)
+            pygame.draw.rect(surf, (42, 36, 58), rect, border_radius=4)
+            pygame.draw.rect(surf, btn_color, rect, width=2 if selected else 1, border_radius=4)
+            img = GRAPHICS.tower(tower_id, size=24)
+            surf.blit(img, img.get_rect(center=(btn_x + 18, by + 26)))
+            name = i18n.tower_display(tower_id, "name")
+            self._draw_text(name, btn_x + 40, by + 8, self.font_small, COLOR_TEXT if affordable else COLOR_TEXT_DIM)
+            self._draw_text(
+                f"{cost}", btn_x + 40, by + 26, self.font_small, COLOR_GOLD if affordable else COLOR_TEXT_DIM
+            )
+            self._draw_text(str(i + 1), btn_x + btn_w - 24, by + 8, self.font_small, COLOR_ACCENT)
 
     def _draw_warnings(self, game) -> None:
         surf = self.surface

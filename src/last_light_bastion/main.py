@@ -11,6 +11,7 @@ from config import (
     GAME_SPEEDS,
     MIN_HEIGHT,
     MIN_WIDTH,
+    TOWER_BASE_COSTS,
 )
 from i18n import I18n
 from renderer import Renderer
@@ -202,6 +203,19 @@ class Game:
                 return
             if px + 114 <= x <= px + 198 and yy <= y <= yy + 30:
                 self._sell_selected()
+                return
+        # build palette (below grid)
+        ox, oy = state.grid_offset
+        ts = state.tile_size
+        bar_y = oy + state.map.rows * ts + 10
+        by = bar_y + 10
+        bx = ox + 110
+        btn_w = 100
+        for i, tower_id in enumerate(["archer", "cannon", "frost", "arc", "poison", "support"]):
+            btn_x = bx + i * (btn_w + 10)
+            if btn_x <= x <= btn_x + btn_w - 8 and by <= y <= by + 58:
+                if state.currency >= TOWER_BASE_COSTS[tower_id]:
+                    state.start_placement(tower_id)
                 return
         # grid click
         gx, gy = state.pixel_to_grid(x, y)

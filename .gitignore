@@ -47,6 +47,9 @@ desktop.ini
 *.log
 save_*.json
 
+# QA / test evidence (internal, not for release)
+/qa_evidence*/
+
 # Testing
 .pytest_cache/
 .coverage/
