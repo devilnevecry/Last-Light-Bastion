@@ -90,7 +90,7 @@ class Renderer:
         return rect
 
     def _draw_campaign(self, ui, i18n) -> None:
-        w, h = self.surface.get_size()
+        w, _h = self.surface.get_size()
         self._draw_text(i18n.t("ui", "campaign"), w // 2, 36, self.font_big, COLOR_ACCENT, True)
         for i, key in enumerate(MAP_ORDER):
             col = i % 3
@@ -304,7 +304,7 @@ class Renderer:
     # ---------------------------------------------------------------- HUD
     def _draw_hud(self, game, i18n) -> None:
         surf = self.surface
-        w, h = surf.get_size()
+        w, _h = surf.get_size()
         pygame.draw.rect(surf, (26, 22, 38), (0, 0, w, 60))
         pygame.draw.line(surf, COLOR_ACCENT, (0, 60), (w, 60), 2)
         self._draw_text(f"{i18n.t('ui', 'currency')}: {game.currency}", 20, 14, self.font, COLOR_GOLD)
@@ -336,7 +336,7 @@ class Renderer:
 
     def _draw_tower_panel(self, tower, i18n) -> None:
         surf = self.surface
-        w, h = surf.get_size()
+        w, _h = surf.get_size()
         panel_w = 210
         panel_x = w - panel_w - 20
         panel_y = 80

@@ -6,6 +6,7 @@ import math
 
 import pygame
 from config import (
+    BOSS_STATS,
     COLOR_ACCENT,
     COLOR_ARC,
     COLOR_CANNON,
@@ -19,6 +20,7 @@ from config import (
     COLOR_POISON,
     COLOR_TEXT,
     COLOR_TEXT_DIM,
+    ENEMY_STATS,
 )
 
 
@@ -76,8 +78,6 @@ def make_tower_image(tower_id: str, size: int = 34) -> pygame.Surface:
 def make_enemy_image(enemy_id: str, size: int = 20, flying: bool = False) -> pygame.Surface:
     surf = pygame.Surface((size, size), pygame.SRCALPHA)
     cx, cy = size // 2, size // 2
-    from config import ENEMY_STATS
-
     color = ENEMY_STATS[enemy_id]["color"]
 
     if enemy_id == "basic":
@@ -113,8 +113,6 @@ def make_enemy_image(enemy_id: str, size: int = 20, flying: bool = False) -> pyg
 def make_boss_image(boss_id: str, size: int = 46) -> pygame.Surface:
     surf = pygame.Surface((size, size), pygame.SRCALPHA)
     cx, cy = size // 2, size // 2
-    from config import BOSS_STATS
-
     color = BOSS_STATS[boss_id]["color"]
 
     if boss_id == "void_reaver":
@@ -220,8 +218,6 @@ def make_ui_panel(width: int, height: int) -> pygame.Surface:
 
 
 def make_button(width: int, height: int, active: bool = True) -> pygame.Surface:
-    from config import COLOR_ACCENT
-
     surf = pygame.Surface((width, height), pygame.SRCALPHA)
     base = COLOR_ACCENT if active else COLOR_TEXT_DIM
     surf.fill((*base, 40))

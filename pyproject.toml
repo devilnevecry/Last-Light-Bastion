@@ -32,7 +32,7 @@ include = ["last_light_bastion*"]
 line-length = 120
 target-version = "py311"
 lint.select = ["E", "F", "I", "B", "C4", "PL", "RUF", "PLR", "PLE"]
-lint.ignore = ["B008", "C408", "PLW0603", "PLR0912", "PLR0913", "PLR0915", "PLR2004", "RUF001"]
+lint.ignore = ["B008", "C408", "PLW0603", "PLR0912", "PLR0913", "PLR0915", "PLR0917", "PLR2004", "RUF001"]
 
 [tool.ruff.format]
 docstring-code-format = true

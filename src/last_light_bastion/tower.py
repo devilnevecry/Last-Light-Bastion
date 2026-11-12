@@ -9,6 +9,7 @@ from config import (
     TOWER_BASE_COSTS,
     TOWER_STATS,
     UPGRADE_COSTS,
+    UPGRADE_DESCRIPTIONS,
     UPGRADE_MULTIPLIERS,
 )
 
@@ -153,8 +154,6 @@ class Tower:
         return math.hypot(ox - tx, oy - ty) <= self.range + 2
 
     def get_upgrade_description(self) -> str:
-        from config import UPGRADE_DESCRIPTIONS
-
         return UPGRADE_DESCRIPTIONS.get(self.tower_id, {}).get(self.level, "")
 
     def to_dict(self) -> dict:

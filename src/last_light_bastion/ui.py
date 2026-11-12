@@ -62,6 +62,6 @@ class UI:
 
     # ----- input -----
     def handle_mouse_click(self, pos, game, i18n) -> None:
-        x, y = pos
+        _x, _y = pos
         # handled mostly in main loop per-state; kept as hook
         pass

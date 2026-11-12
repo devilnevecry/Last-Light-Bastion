@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from base import *  # noqa: F403
 from config import BASE_HEALTH, STARTING_CURRENCY
+from enemy import Enemy
+from projectile import Projectile
 from state import GameState
 
 
@@ -67,8 +69,6 @@ def test_enemy_reaching_exit_damage_base():
     gs = _new_game()
     hp_before = gs.base_health
     # spawn an enemy already at the final waypoint by forcing finished
-    from enemy import Enemy
-
     e = Enemy("basic", [(100, 100), (200, 100)])
     e.x, e.y = 200, 100
     e.finished = True
@@ -81,8 +81,6 @@ def test_enemy_reaching_exit_damage_base():
 def test_defeat_when_base_zero():
     gs = _new_game()
     gs.base_health = 1
-    from enemy import Enemy
-
     e = Enemy("basic", [(100, 100), (200, 100)])
     e.x, e.y = 200, 100
     e.finished = True
@@ -94,8 +92,6 @@ def test_defeat_when_base_zero():
 def test_simultaneous_exit_damage():
     gs = _new_game()
     gs.base_health = 2
-    from enemy import Enemy
-
     e1 = Enemy("basic", [(100, 100), (200, 100)])
     e1.x, e1.y = 200, 100
     e1.finished = True
@@ -113,15 +109,11 @@ def test_multiple_projectiles_same_target():
     gs.start_placement("archer")
     gs.try_place_tower(3, 3)
     t = gs.towers[0]
-    from enemy import Enemy
-
     e = Enemy("basic", [(200, 100), (300, 100)])
     e.x, e.y = 200, 100
     e.hp = 5
     gs.enemies = [e]
     # manually shoot twice and drive projectiles into the enemy
-    from projectile import Projectile
-
     for _ in range(2):
         for pd in t.shoot(e, 1000):
             p = Projectile(pd)

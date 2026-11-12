@@ -9,8 +9,10 @@ from config import (
     BASE_WIDTH,
     FPS_TARGET,
     GAME_SPEEDS,
+    MAP_ORDER,
     MIN_HEIGHT,
     MIN_WIDTH,
+    STAR_THRESHOLDS,
     TOWER_BASE_COSTS,
 )
 from i18n import I18n
@@ -157,8 +159,6 @@ class Game:
 
     def _handle_campaign_click(self, x, y, w, h) -> None:
         # back not present; clicking a map starts it
-        from config import MAP_ORDER
-
         for i, key in enumerate(MAP_ORDER):
             col = i % 3
             row = i // 3
@@ -291,8 +291,6 @@ class Game:
         ui = self.ui
         remaining = state.base_health
         pct = remaining / state.base_max_health if state.base_max_health else 0
-        from config import STAR_THRESHOLDS
-
         stars = sum(1 for t in STAR_THRESHOLDS if pct * 100 >= t)
         ui.stars = stars
         score = int(state.currency + remaining * 10 + stars * 100)
