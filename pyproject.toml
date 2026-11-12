@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "last-light-bastion"
+version = "1.0.0"
+description = "A complete 2D tower defense game built with Python and pygame-ce."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "devilnevecry", email = "devilnevecry@example.com"}]
+license = {file = "LICENSE"}
+dependencies = [
+    "pygame-ce>=2.5.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.8.0",
+]
+
+[project.scripts]
+last-light-bastion = "last_light_bastion.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["last_light_bastion*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+lint.select = ["E", "F", "I", "B", "C4", "PL", "RUF", "PLR", "PLE"]
+lint.ignore = ["B008", "C408", "PLW0603", "PLR0912", "PLR0913", "PLR0915", "PLR2004", "RUF001"]
+
+[tool.ruff.format]
+docstring-code-format = true
+preview = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = ["-q"]
